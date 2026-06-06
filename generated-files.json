@@ -1,0 +1,30 @@
+{
+  "project": "PLC Code Generator AI",
+  "files": [
+    ".env.example",
+    "README.md",
+    ".github/workflows/deploy.yml",
+    "backend/requirements.txt",
+    "backend/app/__init__.py",
+    "backend/app/main.py",
+    "backend/app/config.py",
+    "backend/app/services/__init__.py",
+    "backend/app/services/claude_service.py",
+    "backend/app/services/dynamodb_service.py",
+    "backend/app/routes/__init__.py",
+    "backend/app/routes/generate.py",
+    "backend/app/routes/codes.py",
+    "backend/app/routes/analyze.py",
+    "frontend/package.json",
+    "frontend/public/index.html",
+    "frontend/src/index.js",
+    "frontend/src/App.jsx",
+    "frontend/src/pages/Dashboard.jsx",
+    "frontend/src/pages/Generator.jsx",
+    "frontend/src/components/CodeInput.jsx",
+    "frontend/src/components/CodeEditor.jsx",
+    "frontend/src/components/ResultPreview.jsx",
+    "frontend/src/components/CodeShare.jsx"
+  ],
+  "total": 24
+}
