@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 512
+    Environment:
+      Variables:
+        OPENROUTER_API_KEY: !Ref OpenRouterApiKey
+        OPENROUTER_MODEL: !Ref OpenRouterModel
+        AWS_REGION_NAME: !Ref AWS::Region
+        DYNAMODB_TABLE: !Ref DynamoDBTableName
+
+Parameters:
+  OpenRouterApiKey:
+    Type: String
+    NoEcho: true
+  OpenRouterModel:
+    Type: String
+    Default: anthropic/claude-3-haiku
+  DynamoDBTableName:
+    Type: String
+    Default: plc-codes
+
+Resources:
+  PlcCodesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref DynamoDBTableName
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  BackendFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: backend/
+      Handler: app.main.handler
+      Runtime: python3.11
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DynamoDBTableName
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+        Root:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: ANY
+
+Outputs:
+  ApiUrl:
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+    Export:
+      Name: PlcBackendApiUrl
